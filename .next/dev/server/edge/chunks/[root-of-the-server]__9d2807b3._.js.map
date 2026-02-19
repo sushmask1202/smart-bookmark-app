@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 16, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/Desktop/smart-bookmark-app/middleware.ts"],"sourcesContent":["import { NextResponse } from \"next/server\"\nimport type { NextRequest } from \"next/server\"\n\nexport function middleware(request: NextRequest) {\n  const token = request.cookies.get(\"sb-access-token\")\n\n  if (!token && request.nextUrl.pathname.startsWith(\"/dashboard\")) {\n    return NextResponse.redirect(new URL(\"/\", request.url))\n  }\n\n  return NextResponse.next()\n}\n"],"names":[],"mappings":";;;;AAAA;AAAA;;AAGO,SAAS,WAAW,OAAoB;IAC7C,MAAM,QAAQ,QAAQ,OAAO,CAAC,GAAG,CAAC;IAElC,IAAI,CAAC,SAAS,QAAQ,OAAO,CAAC,QAAQ,CAAC,UAAU,CAAC,eAAe;QAC/D,OAAO,uOAAY,CAAC,QAAQ,CAAC,IAAI,IAAI,KAAK,QAAQ,GAAG;IACvD;IAEA,OAAO,uOAAY,CAAC,IAAI;AAC1B"}}]
+}
