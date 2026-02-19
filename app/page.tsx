@@ -1,31 +1,57 @@
 "use client"
 
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
 
 export default function Home() {
+  const router = useRouter()
 
-  // Login button - existing users
+  // 🔹 Check session on load
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (session) {
+        router.replace("/dashboard")
+      }
+    }
+
+    checkSession()
+
+    // 🔹 Listen for login event
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (session) {
+          router.replace("/dashboard")
+        }
+      }
+    )
+
+    return () => {
+      authListener.subscription.unsubscribe()
+    }
+  }, [router])
+
+
+  // Login button
   const login = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
+    await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${location.origin}/dashboard`, // existing users will be logged in
+        redirectTo: `${location.origin}/dashboard`,
       },
-    });
-
-    if (error) console.log("Login error:", error.message);
+    })
   }
 
-  // Sign Up button - new users
+  // Sign Up button
   const signUp = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
+    await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${location.origin}/dashboard`, // new users will create account
+        redirectTo: `${location.origin}/dashboard`,
       },
-    });
-
-    if (error) console.log("Signup error:", error.message);
+    })
   }
 
   return (
